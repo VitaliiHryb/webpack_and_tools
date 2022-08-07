@@ -1,17 +1,18 @@
-const store = (function () {
-  let storage = {};
-  return {
-    addItem: function (key, value) {
-      Object.assign(storage, { [key]: value });
-    },
-    clear: function () {
-      storage = [];
-    },
-  };
-})();
+// file path: index.js
 
-(function func() {
-  let a = 17;
+// импортируйте все полифилы из папки polyfills
+// импортируйте ф-ции sum и mult под такими же именами, а так же ф-цию calc под именем calcExpression из файла calculator/index.js
+// импортируйте ф-цию fetchUser из profile/gateway.js под таким же именем
+// импортируйте ф-цию printProfile из profile/index.js под таким же именем
+import calcExpression, { sum, mult } from './calculator/index.js';
+import fetchUser from './profile/gateway.js';
+import { printProfile } from './profile/index.js';
+import './polyfills/array-flatMap.js';
 
-  console.log(a);
-})();
+const calcResult = calcExpression('1 + 2');
+const sumResult = sum(1, 2);
+const multResult = mult(1, 2);
+const userDataPromise = fetchUser('facebook');
+printProfile({ name: 'Tom', from: 'The World' });
+
+// убедитесь, скрипт выполнился без ошибок

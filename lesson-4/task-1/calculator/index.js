@@ -1,0 +1,25 @@
+// file path: calculator/index.js
+
+// экспортируйте sum и mult как именной export
+
+export const sum = (a, b) => {
+  console.log('implementation for sum');
+  // ... implementation
+};
+
+export const mult = (a, b) => {
+  console.log('implementation for mult');
+  // ... implementation
+};
+
+// экспортируйте calc как export по умолчанию
+
+export default expression => {
+  console.log('implementation for calc');
+  // ... implementation
+};
+
+// export { sum, mult, calc };
+// export default calc;
+// import calc from './calculator/index.js'
+// => import anyFunc, { sum, mult } from './calculator/index.js'
