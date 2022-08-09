@@ -1,7 +1,6 @@
+const baseUrl = 'https://62e9354b01787ec712138da8.mockapi.io/api/v1/users';
 // const baseUrl =
-//   'https://crudcrud.com/api/c28d6298d7984ed3ae29967a894d5dbf';
-const baseUrl =
-  'https://crudcrud.com/api/dab3bb3acc8245358def6828b2b405b2/tasks';
+//   'https://crudcrud.com/api/dab3bb3acc8245358def6828b2b405b2/tasks';
 
 function mapTasks(tasks) {
   return tasks.map(({ _id, ...rest }) => ({ ...rest, id: _id }));

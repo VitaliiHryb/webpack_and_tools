@@ -9,7 +9,7 @@
     "build:styles": "sass ./src/styles/index.scss ./dist/styles.css",
     "copy:html": "cp ./src/index.html ./dist/index.html",
     "transpile:scripts": "babel ./src --out-dir=./temp",
-    "build:scripts": "webpack ./temp/scripts/index.js",
+    "build:scripts": "webpack ./temp/scripts/index.js --mode=production",
     "clean": "rm -rf ./dist",
     "build": "npm-run-all clean transpile:scripts build:* copy:*"
   },
