@@ -1,23 +1,34 @@
-import { renderTasks } from '../common/renderer.js';
-import { createTask, getTasksList } from '../common/tasksGateway.js';
+import { renderTasks } from './renderer.js';
+import { getItem, setItem } from './storage.js';
+import { getTasksList, creatTask } from './tasksGateway.js';
 
-const createTaskBtnElem = document.querySelector('.create-task-btn');
+function onCreateTask() {
+  const taskTitleInputElem = document.querySelector('.task-input');
+  const text = taskTitleInputElem.value;
 
-const onCreateBtnClick = () => {
-  getTasksList().then(tasks => {
-    const newTaskElement = document.querySelector('.task-input');
-    if (!newTaskElement.value) return;
+  if (!text) return;
 
-    const id = tasks.length ? Math.max(...tasks.map(task => task.id)) + 1 : 1;
-    const text = newTaskElement.value;
-    createTask({ id, text, isDone: false })
-      .then(getTasksList)
-      .then(newTasksList => {
-        renderTasks(newTasksList);
-      });
+  taskTitleInputElem.value = '';
 
-    newTaskElement.value = '';
-  });
-};
+  const newTask = {
+    text,
+    done: false,
+    createDate: new Date().toISOString(),
+  };
 
-createTaskBtnElem.addEventListener('click', onCreateBtnClick);
+  creatTask(newTask)
+    .then(() => getTasksList())
+    .then(newTasksList => {
+      setItem('tasksList', newTasksList);
+      renderTasks();
+      // taskTitleInputElem.value = '';
+    });
+}
+
+export { onCreateTask };
+
+// 1. Prepare data
+// 2. Write data to Data Base
+// 3. Read new data from server
+// 4. Save new data to front-end storage
+// 5. Update UI based on new data
