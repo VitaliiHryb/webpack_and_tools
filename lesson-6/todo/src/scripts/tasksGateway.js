@@ -1,41 +1,33 @@
-const baseUrl = 'https://crudcrud.com/api/c28d6298d7984ed3ae29967a894d5dbf';
-// const baseUrl =
-//   'https://crudcrud.com/api/dab3bb3acc8245358def6828b2b405b2/tasks';
+const apiUrl = 'https://6151a12d4a5f22001701d31f.mockapi.io';
 
-function mapTasks(tasks) {
-  return tasks.map(({ _id, ...rest }) => ({ ...rest, id: _id }));
-}
+export const getTasksList = () => {
+  return fetch(apiUrl + '/tasks').then(response => response.json());
+};
 
-function getTasksList() {
-  return fetch(baseUrl)
-    .then(response => response.json())
-    .then(tasks => mapTasks(tasks));
-}
-
-function creatTask(taskData) {
-  return fetch(baseUrl, {
+export const createTask = createdTask => {
+  const fetchData = {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json;charset=utf-8',
-    },
-    body: JSON.stringify(taskData),
-  });
-}
+    body: JSON.stringify(createdTask),
+    headers: { 'Content-Type': 'application/json' },
+  };
 
-function updateTask(taskId, updatedTaskData) {
-  return fetch(`${baseUrl}/${taskId}`, {
+  return fetch(apiUrl + '/tasks', fetchData);
+};
+
+export const updateTask = updatedTask => {
+  const fetchData = {
     method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json;charset=utf-8',
-    },
-    body: JSON.stringify(updatedTaskData),
-  });
-}
+    body: JSON.stringify(updatedTask),
+    headers: { 'Content-Type': 'application/json' },
+  };
 
-function deleteTask(taskId) {
-  return fetch(`${baseUrl}/${taskId}`, {
+  return fetch(apiUrl + `/tasks/${updatedTask.id}`, fetchData);
+};
+
+export const deleteTask = taskToDeleteId => {
+  const fetchData = {
     method: 'DELETE',
-  });
-}
+  };
 
-export { getTasksList, creatTask, updateTask, deleteTask };
+  return fetch(apiUrl + `/tasks/${taskToDeleteId}`, fetchData);
+};

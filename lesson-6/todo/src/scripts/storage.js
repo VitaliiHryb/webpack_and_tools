@@ -1,9 +1,13 @@
-function setItem(key, value) {
+export const setItem = (key, value) => {
   localStorage.setItem(key, JSON.stringify(value));
-}
+};
 
-function getItem(key) {
-  return JSON.parse(localStorage.getItem(key));
-}
+export const getItem = key => JSON.parse(localStorage.getItem(key));
 
-export { getItem, setItem };
+//const tasks = [
+//	{ id: 1, text: "Buy milk", isDone: false },
+//	{ id: 2, text: "Pick up Tom from airport", isDone: false },
+//	{ id: 3, text: "Visit party", isDone: false },
+//	{ id: 4, text: "Visit doctor", isDone: true },
+//	{ id: 5, text: "Buy meat", isDone: true },
+//];

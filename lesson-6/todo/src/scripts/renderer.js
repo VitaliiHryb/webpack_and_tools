@@ -1,56 +1,81 @@
-import { getItem } from './storage.js';
+import './common.scss';
+
+import { updateTask, deleteTask, getTasksList } from './tasksGateway.js';
 
 const listElem = document.querySelector('.list');
 
-function compareTasks(a, b) {
-  if (a.done - b.done !== 0) {
-    return a.done - b.done;
-  }
+function createElement(elementType, class_, attrs, dataset) {
+  const element = document.createElement(elementType);
 
-  if (a.done) {
-    return new Date(b.finishDate) - new Date(a.finishDate);
-  }
+  if (class_) element.classList.add(class_);
 
-  return new Date(b.createDate) - new Date(a.createDate);
+  if (attrs)
+    Object.keys(attrs).forEach(attr => {
+      element.setAttribute(attr, attrs[attr]);
+    });
+
+  if (dataset)
+    Object.keys(dataset).forEach(dataKey => {
+      element.dataset[dataKey] = dataset[dataKey];
+    });
+
+  return element;
 }
 
-function createCheckbox({ done, id }) {
-  const checkboxElem = document.createElement('input');
-  checkboxElem.setAttribute('type', 'checkbox');
-  checkboxElem.setAttribute('data-id', id);
-  checkboxElem.checked = done;
-  checkboxElem.classList.add('list-item__checkbox');
+const onCheckboxClick = ({ target }) => {
+  getTasksList().then(tasks => {
+    const taskId = target.closest('.list__item').dataset.taskId;
+    const task = tasks.find(task => task.id === taskId);
+    task.isDone = !task.isDone;
 
-  return checkboxElem;
-}
+    updateTask(task)
+      .then(getTasksList)
+      .then(tasksList => {
+        renderTasks(tasksList);
+      });
+  });
+};
 
-function createListItem({ text, done, id }) {
-  const listItemElem = document.createElement('li');
-  listItemElem.classList.add('list-item');
+const onDeleteTask = ({ target }) => {
+  const taskToDeleteId = target.closest('.list__item').dataset.taskId;
 
-  if (done) listItemElem.classList.add('list-item_done');
+  deleteTask(taskToDeleteId)
+    .then(getTasksList)
+    .then(tasksList => {
+      renderTasks(tasksList);
+    });
+};
 
-  const textElem = document.createElement('span');
-  textElem.classList.add('list-item__text');
-  textElem.textContent = text;
-
-  const checkboxElem = createCheckbox({ done, id });
-
-  const deleteBtnElem = document.createElement('button');
-  deleteBtnElem.classList.add('list-item__delete-btn');
-
-  listItemElem.append(checkboxElem, textElem, deleteBtnElem);
-
-  return listItemElem;
-}
-
-function renderTasks() {
-  const tasksList = getItem('tasksList') || [];
-
+export function renderTasks(tasksList) {
+  tasksList = tasksList || [];
   listElem.innerHTML = '';
-  const tasksElems = tasksList.sort(compareTasks).map(createListItem);
+
+  const tasksElems = tasksList
+    .sort((a, b) => a.isDone - b.isDone)
+    .map(({ id, text, isDone }) => {
+      const listItemElem = createElement('li', 'list__item', null, {
+        taskId: id,
+      });
+
+      const checkboxElem = createElement('input', 'list__item-checkbox', {
+        type: 'checkbox',
+      });
+      checkboxElem.checked = isDone;
+      checkboxElem.addEventListener('click', onCheckboxClick);
+
+      const deleteBtnElem = createElement('button', 'list__item-delete-btn');
+      deleteBtnElem.addEventListener('click', onDeleteTask);
+
+      const textElem = createElement('span', 'list__item-text');
+      textElem.textContent = text;
+      if (isDone) {
+        listItemElem.classList.add('list__item_done');
+        textElem.classList.add('list__item_cross-text');
+      }
+
+      listItemElem.append(checkboxElem, textElem, deleteBtnElem);
+      return listItemElem;
+    });
 
   listElem.append(...tasksElems);
 }
-
-export { renderTasks };
