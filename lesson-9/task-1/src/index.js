@@ -14,4 +14,10 @@ const profile = {
 
 printProfile(profile);
 
-console.log(profile);
+const num = 17;
+
+/* eslint-disable */
+if (num === 18) {
+  alert('Hi');
+}
+/* eslint-enable */
